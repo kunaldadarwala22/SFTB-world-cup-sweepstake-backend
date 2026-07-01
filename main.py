@@ -29,22 +29,20 @@ app.add_middleware(
 POOL_PER_PERSON = 25
 PLAYERS = {
     "Kunal": [
-        "England", "France", "Jordan", "Colombia", "Curacao", "Tunisia",
-        "Senegal", "Algeria", "Uzbekistan", "Japan", "Morocco", "Netherlands",
-    ],
-    "Bharj": [
-        "Paraguay", "Australia", "South Africa", "Cape Verde", "Mexico",
-        "Saudi Arabia", "Belgium", "United States", "Canada", "Spain",
-        "Sweden", "Czechia",
+        "England", "Spain", "Morocco", "Croatia",
+        "Australia", "Ghana", "Cape Verde", "Iraq",
     ],
     "Din": [
-        "Egypt", "Germany", "Ghana", "Switzerland", "Bosnia & Herzegovina",
-        "Brazil", "Turkey", "New Zealand", "Ivory Coast", "Haiti",
-        "Argentina", "DR Congo",
+        "Brazil", "Portugal", "Norway", "Senegal",
+        "Sweden", "Algeria", "DR Congo", "Qatar",
+    ],
+    "Bharj": [
+        "France", "Belgium", "Canada", "Japan",
+        "United States", "Bosnia & Herzegovina", "Colombia", "South Korea",
     ],
     "Chutz": [
-        "Iraq", "Iran", "Croatia", "Austria", "Portugal", "Norway",
-        "Ecuador", "Scotland", "Qatar", "South Korea", "Uruguay", "Panama",
+        "Argentina", "Germany", "Mexico", "Switzerland",
+        "Ecuador", "Austria", "South Africa", "Czechia",
     ],
 }
 
