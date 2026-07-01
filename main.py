@@ -26,7 +26,7 @@ app.add_middleware(
     allow_headers=["*"],
 )
 
-POOL_PER_PERSON = 25
+POOL_PER_PERSON = 10
 PLAYERS = {
     "Kunal": [
         "England", "Spain", "Morocco", "Croatia",
