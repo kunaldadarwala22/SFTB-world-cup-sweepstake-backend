@@ -279,6 +279,9 @@ async def compute_sweepstake():
             "away_pens": pens.get("awayTeam"),
             "winner": winner,
         })
+
+    # Build per-player summary
+    players_out = {}
     for player, teams in PLAYERS.items():
         team_rows = [team_state[t] for t in teams]
         alive = [t for t in team_rows if not t["eliminated"]]
