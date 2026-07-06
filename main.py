@@ -250,7 +250,35 @@ async def compute_sweepstake():
         }
         matches_upcoming.setdefault(date_str, []).append(entry)
 
-    players_out = {}
+    # Knockout bracket — all non-group-stage matches organised by stage
+    bracket = {}
+    for stage in ["LAST_32", "LAST_16", "QUARTER_FINALS", "SEMI_FINALS", "THIRD_PLACE", "FINAL"]:
+        bracket[stage] = []
+    for m in matches_sorted:
+        stage = m.get("stage", "")
+        if stage not in bracket:
+            continue
+        home_name_raw = (m.get("homeTeam") or {}).get("name", "TBD")
+        away_name_raw = (m.get("awayTeam") or {}).get("name", "TBD")
+        home_resolved = resolve_team(home_name_raw)
+        away_resolved = resolve_team(away_name_raw)
+        score = m.get("score", {})
+        ft = score.get("fullTime", {})
+        pens = score.get("penalties", {})
+        winner = score.get("winner")
+        bracket[stage].append({
+            "kickoff": m.get("utcDate"),
+            "status": m.get("status", "SCHEDULED"),
+            "home_team": home_name_raw,
+            "away_team": away_name_raw,
+            "home_owner": TEAM_TO_PLAYER.get(home_resolved),
+            "away_owner": TEAM_TO_PLAYER.get(away_resolved),
+            "home_score": ft.get("home"),
+            "away_score": ft.get("away"),
+            "home_pens": pens.get("homeTeam"),
+            "away_pens": pens.get("awayTeam"),
+            "winner": winner,
+        })
     for player, teams in PLAYERS.items():
         team_rows = [team_state[t] for t in teams]
         alive = [t for t in team_rows if not t["eliminated"]]
@@ -276,6 +304,7 @@ async def compute_sweepstake():
         "currency": "GBP",
         "winner": overall_champion_player["name"] if overall_champion_player else None,
         "matches_upcoming": matches_upcoming,
+        "bracket": bracket,
         "players": players_out,
     }
 
