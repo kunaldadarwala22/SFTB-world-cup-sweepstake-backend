@@ -34,7 +34,7 @@ PLAYERS = {
     ],
     "Din": [
         "Brazil", "Portugal", "Norway", "Senegal",
-        "Sweden", "Algeria", "DR Congo", "Qatar",
+        "Sweden", "Algeria", "DR Congo", "Qatar", "Egypt",
     ],
     "Bharj": [
         "France", "Belgium", "Canada", "Japan",
