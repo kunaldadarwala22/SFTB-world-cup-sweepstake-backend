@@ -217,12 +217,18 @@ async def compute_sweepstake():
             team_state[champ]["champion"] = True
             team_state[champ]["eliminated"] = False
 
-    # Today's matches
-    today_str = datetime.datetime.utcnow().strftime("%Y-%m-%d")
-    matches_today = []
+    # Matches over the next 4 days (today inclusive)
+    today = datetime.datetime.utcnow().date()
+    cutoff = today + datetime.timedelta(days=4)
+    matches_upcoming = {}
     for m in matches_sorted:
-        if not m.get("utcDate", "").startswith(today_str):
+        utc_date = m.get("utcDate", "")
+        if not utc_date:
             continue
+        match_date = datetime.datetime.fromisoformat(utc_date.replace("Z", "+00:00")).date()
+        if match_date < today or match_date >= cutoff:
+            continue
+        date_str = match_date.isoformat()
         home_name_raw = (m.get("homeTeam") or {}).get("name", "TBD")
         away_name_raw = (m.get("awayTeam") or {}).get("name", "TBD")
         home_resolved = resolve_team(home_name_raw)
@@ -230,8 +236,8 @@ async def compute_sweepstake():
         score = m.get("score", {})
         full_time = score.get("fullTime", {})
         status = m.get("status", "SCHEDULED")
-        matches_today.append({
-            "kickoff": m.get("utcDate"),
+        entry = {
+            "kickoff": utc_date,
             "stage": m.get("stage"),
             "stage_label": STAGE_LABELS.get(m.get("stage"), m.get("stage")),
             "status": status,
@@ -241,7 +247,8 @@ async def compute_sweepstake():
             "away_owner": TEAM_TO_PLAYER.get(away_resolved),
             "home_score": full_time.get("home"),
             "away_score": full_time.get("away"),
-        })
+        }
+        matches_upcoming.setdefault(date_str, []).append(entry)
 
     players_out = {}
     for player, teams in PLAYERS.items():
@@ -268,7 +275,7 @@ async def compute_sweepstake():
         "total_pool": total_pool,
         "currency": "GBP",
         "winner": overall_champion_player["name"] if overall_champion_player else None,
-        "matches_today": matches_today,
+        "matches_upcoming": matches_upcoming,
         "players": players_out,
     }
 
